@@ -139,6 +139,7 @@ public class Project1{
 						satisfiedCondition[3] = false;
 				}
 			}
+		}
 			//Builds the results message with the relevant results for each condition.
 			if (satisfiedCondition[0]) {
 				resultsMessage += "The input contained no vowels";
@@ -165,7 +166,6 @@ public class Project1{
 			announceResults(resultsMessage);
 
 
-		}
 
 
 
