@@ -78,7 +78,7 @@ public class Project1{
 		//the string of vowels must be in alphabetical order.
 		String vowels = "aeiou", requestMessage = "Enter a word or sentence consisting of spaces, letters and numbers only.", foundVowels = "";
 		String windowTitle = "Vowel Analyzer",userInput, resultsMessage = "";
-		int [] vowelCount = {0, 0, 0, 0, 0};
+		int [] vowelCount = new int[vowels.length()];
 		//This variable is used to store the position in vowelCount which is to be edited to improve code clarity.
 		byte arrayPosition;
 		/*
@@ -172,9 +172,101 @@ public class Project1{
 
 	}
 	public static void consonantCount(){
-	/*
-	TODO: copy/paste above method and find/replace "vowel" with "consonant", or make a single method for both...
-	*/
+		//the string of consonants must be in alphabetical order.
+		String consonants = "bcdfghjklmnpqrstvwxyz", requestMessage = "Enter a word or sentence consisting of spaces, letters and numbers only.", foundConsonants = "";
+		String windowTitle = "Consonant Analyzer",userInput, resultsMessage = "";
+		int [] consonantCount = new int[consonants.length()];
+		//This variable is used to store the position in consonantCount which is to be edited to improve code clarity.
+		byte arrayPosition;
+		/*
+		The array contains toggles for each of the following states.
+		0 - no consonants. 1 - all of the consonants. 2 - all consonants, in alphabetical order
+		3 - all consonants in reverse alphabetical order.
+		assuming all are true to begin with, so the values can be used as entry conditions.
+		*/
+		boolean [] satisfiedCondition = {true, true, true, true};
+		userInput = getUserInput(requestMessage, windowTitle, "[a-zA-Z0-9\\s]+");
+		if (userInput.length() == 0) {
+			announceError("Invalid input.");
+		}
+		//this loop walks the String, userInput, and checks if there are no consonants and sets satisfiedCondition[0] to false if any consonants are found, breaking out of the loop.
+		for (int i = 0; i < userInput.length() && satisfiedCondition[0]; i++)
+			if (consonants.indexOf(userInput.substring(i, i+1)) >= 0)
+				satisfiedCondition[0] = false;
+		//If there's no consonants found by the end of the string, set all other conditions to false.
+		if (satisfiedCondition[0]){
+			satisfiedCondition[1] = false;
+			satisfiedCondition[2] = false;
+			satisfiedCondition[3] = false;
+		}
+		//only executes when a consonant has been found.
+		if (!satisfiedCondition[0]) {
+			//goes through the string, increments the count for any consonants that are found
+			for (int i = 0; i < userInput.length(); i++) {
+				if (consonants.indexOf(userInput.substring(i, i+1)) >= 0){
+					arrayPosition = (byte) consonants.indexOf(userInput.substring(i, i+1));
+					consonantCount[arrayPosition]++;
+					//make a string containing all of the consonants found, in the order they were found.
+					foundConsonants += consonants.substring(arrayPosition);
+				}
+			}
+			//checks if any of the counts for each consonant are zero and sets every boolean for a string with all of the consonants to false.
+			for (int amount: consonantCount) {
+				if (amount == 0){
+					satisfiedCondition[1] = false;
+					satisfiedCondition[2] = false;
+					satisfiedCondition[3] = false;
+				}
+			}
+			//Check the list of all consonants found, to see if they are in order, and in which order.
+			for (int i = 0; i < foundConsonants.length() && (satisfiedCondition[2]||satisfiedCondition[3]); i++) {
+				//check if the first consonant found is the first or last in the list of consonants and changing conditions accordingly.
+				if (i == 0) {
+					if (consonants.indexOf(foundConsonants.substring(0,1)) != 0)
+						satisfiedCondition[2] = false;
+					if (consonants.indexOf(foundConsonants.substring(0,1)) != consonants.length()-1)
+						satisfiedCondition[3] = false;
+				}
+				//check that every other found consonant is in ascending or descending alphabetical order.
+				else {
+					//If two consecutive consonant occurrences aren't identical or bordering each other in the string of consonants set the relevant boolean to false
+					if ((consonants.indexOf(foundConsonants.substring(i,i+1)) - consonants.indexOf(foundConsonants.substring(i-1,i))) < 0)
+						satisfiedCondition[2] = false;
+					if ((consonants.indexOf(foundConsonants.substring(i,i+1)) - consonants.indexOf(foundConsonants.substring(i-1,i))) > 0)
+						satisfiedCondition[3] = false;
+				}
+			}
+		}
+			//Builds the results message with the relevant results for each condition.
+			if (satisfiedCondition[0]) {
+				resultsMessage += "The input contained no consonants";
+			}
+			else{
+				if (satisfiedCondition[1]) {
+					resultsMessage += "The input contained all consonants";
+					if (satisfiedCondition[2]) {
+						resultsMessage += "\\nThe input contained all consonants in alphabetical order.";
+					}
+					else if (satisfiedCondition[3]) {
+						resultsMessage += "\\nThe input contained all consonants in reverse alphabetical order.";
+					}
+				}
+			
+				//If a consonant was found at all, the amount of times it was found is added to the message.
+				resultsMessage += "The consonant";
+				for (int i = 0; i < consonantCount.length; i++) {
+					if (consonantCount[i] > 0)
+						resultsMessage += ", \'" + consonants.substring(i,i+1) + "\'" + " occurs " + consonantCount[i] + " times";
+					if (i == consonantCount.length-1) resultsMessage += ".";
+				}
+			}
+			announceResults(resultsMessage);
+
+
+
+
+
+
 	}
 	public static void stringContent(){
 
