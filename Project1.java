@@ -30,22 +30,23 @@ public class Project1{
 			The option 0 results in a break from the switch construct in order to keep menuChoice
 			at 0 and end the while loop.
 			*/
-			switch (menuChoice){
-				case 1: vowelContent();
-				break;
-				case 2: consonantCount();
-				break;
-				case 3: stringContent();
-				break;
-				case 4: areAnagrams();
-				break;
-				case 5: isPalindrome();
-				break;
-				case 6: longestShortestWord();
-				break;
-				case 0: break;
-				default: menuChoice = -1;
+				switch (menuChoice){
+						case 1: vowelContent();
+						break;
+						case 2: consonantCount();
+						break;
+						case 3: stringContent();
+						break;
+						case 4: areAnagrams();
+						break;
+						case 5: isPalindrome();
+						break;
+						case 6: longestShortestWord();
+						break;
+						case 0: break;
+						default: menuChoice = -1;
 			}
+			System.out.println(menuChoice);
 		}
 
 
@@ -74,9 +75,14 @@ public class Project1{
 		if (userChoice.matches("[0-6]"))
 			chosenOption = Byte.parseByte(userChoice);
 		else{
-			chosenOption = 0;
-			announceError("Invalid option, terminating program.");
-		}
+			if(!userChoice.equals(""))
+			{
+				JOptionPane.showMessageDialog(null, "You must enter a number between 0-6");
+				chosenOption = -1;	
+			}
+			else
+				chosenOption = 0;
+			}
 		return chosenOption;
 	}
 	public static void vowelContent(){
