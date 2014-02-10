@@ -303,7 +303,11 @@ public class Project1{
 		*/
 		String userInput = "", sanatizedString = "";
 		//the concatenation operation ensures that a null pointer exception should not occur if the user cancels text entry.
-		userInput += JOptionPane.showInputDialog(null, message, windowTitle, 3);
+		if (!headless) userInput += JOptionPane.showInputDialog(null, message, windowTitle, 3);
+		else{
+			System.out.println(message);
+			userInput += consoleInput.nextLine();
+		}
 		//clean up the string to remove common text entry errors, multiple assignments are used for clarity.
 		//remove surrounding whitespace.
 		sanatizedString = userInput.trim();
