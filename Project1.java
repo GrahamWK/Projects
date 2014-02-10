@@ -32,15 +32,20 @@ public class Project1{
 			*/
 			switch (menuChoice){
 				case 1: vowelContent();
+				break;
 				case 2: consonantCount();
+				break;
 				case 3: stringContent();
+				break;
 				case 4: areAnagrams();
+				break;
 				case 5: isPalindrome();
+				break;
 				case 6: longestShortestWord();
+				break;
 				case 0: break;
 				default: menuChoice = -1;
 			}
-			System.out.println(menuChoice);
 		}
 
 
