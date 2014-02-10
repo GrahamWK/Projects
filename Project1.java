@@ -30,22 +30,23 @@ public class Project1{
 			The option 0 results in a break from the switch construct in order to keep menuChoice
 			at 0 and end the while loop.
 			*/
-			switch (menuChoice){
-				case 1: vowelContent();
-				break;
-				case 2: consonantCount();
-				break;
-				case 3: stringContent();
-				break;
-				case 4: areAnagrams();
-				break;
-				case 5: isPalindrome();
-				break;
-				case 6: longestShortestWord();
-				break;
-				case 0: break;
-				default: menuChoice = -1;
+				switch (menuChoice){
+						case 1: vowelContent();
+						break;
+						case 2: consonantCount();
+						break;
+						case 3: stringContent();
+						break;
+						case 4: areAnagrams();
+						break;
+						case 5: isPalindrome();
+						break;
+						case 6: longestShortestWord();
+						break;
+						case 0: break;
+						default: menuChoice = -1;
 			}
+			System.out.println(menuChoice);
 		}
 
 
@@ -68,15 +69,17 @@ public class Project1{
 		if (headless){
 			System.out.println(menuOptions);
 			userChoice = consoleInput.nextLine();}
-		if (userChoice != null) userChoice = userChoice.trim();
-		else userChoice = "";
-		//checks if the option is in the valid range, selects exit if anything else is entered.
-		if (userChoice.matches("[0-6]"))
-			chosenOption = Byte.parseByte(userChoice);
-		else{
-			chosenOption = 0;
-			announceError("Invalid option, terminating program.");
+		//If input isn't null, it checks if it's in the range 0-6. If it isn't, the menu will repeat.
+		if (userChoice != null){
+			 userChoice = userChoice.trim();
+			if (userChoice.matches("[0-6]"))
+				chosenOption = Byte.parseByte(userChoice);
+			else{
+				JOptionPane.showMessageDialog(null, "You must enter a number between 0-6");
+				chosenOption = -1;	
+			}
 		}
+		else chosenOption = 0;
 		return chosenOption;
 	}
 	public static void vowelContent(){
@@ -280,6 +283,11 @@ public class Project1{
 
 	}
 	public static void isPalindrome(){
+		String requestMessage = "Enter a word or sentence consisting of spaces, letters and numbers only.";
+		String windowTitle = "Palindrome Analyzer", userInput;
+		userInput = getUserInput(requestMessage, windowTitle, "[a-zA-Z0-9\\s]+");
+		String userInputArray [] = userInput.split(" ");
+		System.out.print(userInputArray[0] + userInputArray[1] + userInputArray[2] + userInputArray[3]);
 
 	}
 	public static void longestShortestWord(){
