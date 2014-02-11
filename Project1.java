@@ -4,7 +4,7 @@ public class Project1{
 	/**
 		A simple program to demonstrate string manipulation.
 		Effort was made to have only one exit point in the code, returning an exit state would probably be a better idea though.
-		I'm also assuming that the main method is meant do deal with anything but selecting the method to execute.
+		I'm also assuming that the main method is meant to deal with anything but selecting the method to execute.
 		Spelling in this code is complaint with American English.
 	**/
 	//This boolean determines if the program is to run only in the console window. Or if it should present dialog windows to the user.
@@ -30,21 +30,21 @@ public class Project1{
 			The option 0 results in a break from the switch construct in order to keep menuChoice
 			at 0 and end the while loop.
 			*/
-				switch (menuChoice){
-					case 1: vowelContent();
-					break;
-					case 2: consonantCount();
-					break;
-					case 3: stringContent();
-					break;
-					case 4: areAnagrams();
-					break;
-					case 5: isPalindrome();
-					break;
-					case 6: longestShortestWord();
-					break;
-					case 0: break;
-					default: menuChoice = -1;
+			switch (menuChoice){
+				case 1: vowelContent();
+				break;
+				case 2: consonantCount();
+				break;
+				case 3: stringContent();
+				break;
+				case 4: areAnagrams();
+				break;
+				case 5: isPalindrome();
+				break;
+				case 6: longestShortestWord();
+				break;
+				case 0: break;
+				default: menuChoice = -1;
 			}
 			System.out.println(menuChoice);
 		}
