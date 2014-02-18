@@ -283,15 +283,124 @@ public class Project1{
 
 	}
 	public static void isPalindrome(){
-		String requestMessage = "Enter a word or sentence consisting of spaces, letters and numbers only.";
-		String windowTitle = "Palindrome Analyzer", userInput;
-		userInput = getUserInput(requestMessage, windowTitle, "[a-zA-Z0-9\\s]+");
-		String userInputArray [] = userInput.split(" ");
-		System.out.print(userInputArray[0] + userInputArray[1] + userInputArray[2] + userInputArray[3]);
+		String requestMessage = "Enter a word or sentence consisting of spaces, numbers and alphabetic characters only.";	//This is initiation for the getinput method
+		String windowTitle = "Palindrome Analyzer", userInput, result = "";													//This will be the window title for the input box
+		String trimmedUserInput = "";																						
+		boolean letterLevel = false, wordLevel = false;																		//The boolean variable which will show what type of palindrom the phrase/word may be
+		userInput = getUserInput(requestMessage, windowTitle, ".*");										//Here we call the getUserInput method and put in our message and title and a pattern
+		char aChar;
+		int i, j, index;																			
+		for(index = 0; index < userInput.length(); index++)											//If it isn't then it isn't included in the trimmedUserInput
+		{																							//This section checks whether each character in the phrase is an alphabet or white space.
+			aChar = userInput.charAt(index);
+			if (Character.isLetterOrDigit(aChar) || Character.isWhitespace(aChar))
+				trimmedUserInput += aChar;
+		}
+		if (trimmedUserInput.equals(""))														//If the word was all non alphabets it will return empty 
+			result = "Input must consist of a word or phrase";									//Thus the appropriate error message is displayed
+		else
+		{
+			String userInputArray [] = trimmedUserInput.split(" ");								//The user input is split into an array 
+			if(userInputArray.length > 1)														//if it's not a single word, we check for palindrome on word level
+			{																					//we start at each end of the phrase, and compare the words whilst moving inwards
+				i = 0; j =  userInputArray.length - 1;
+				while ((userInputArray[i].equalsIgnoreCase(userInputArray[j])) && (i < j))
+				{	
+					i++;
+					j--;
+				}
+				if (i >= j)
+				{
+					wordLevel = true;															//If the word is a palindrome, wordlevel is set to true
+				}
+					
+			}
+			String reverseUserInput = "", newTrimmedUserInput = "";								//We create two new empty strings
+			for(index = 0; index < trimmedUserInput.length(); index++)							//The first is filled with just the alphabetic characters from trimmedUserInput
+			{
+				aChar = trimmedUserInput.charAt(index);											//we utilize precisely the same method as we did to make trimmedUserInput
+				if (Character.isLetterOrDigit(aChar))											//but we only checks for is letter or digit
+					newTrimmedUserInput += aChar;
+			}
+			for(index = newTrimmedUserInput.length() - 1; index >= 0; index--)					//This simply reverse the contents of newTrimmedUserInput
+					reverseUserInput += newTrimmedUserInput.charAt(index);						//and puts it into reverseUserInput
+			if(reverseUserInput.equalsIgnoreCase(newTrimmedUserInput))
+				letterLevel = true;																//If the reversed contents are equals to the newTrimmedUserInput contents then it is a letter palindrome
+			if(letterLevel && wordLevel)																				//If both the letter and word level returned true we know that the input was a phrase
+				result = "The Phrase \"" + userInput + "\" is a palindrome at the letter level and the word level";		//It was a palindrome at both levels
+			else if(wordLevel)																							//This would indicate a palindrome at just the word level
+				result = "The Phrase \"" + userInput + "\" is a palindrome the word level";								//again we only have to cater for phrases, not words.
+			else if(letterLevel)																						//Here we check for letter palindrome
+				result = "The word/phrase \"" + userInput + "\" is a palindrome at the letter level";					//The input could have been a phrase or a word
+			else																										//;In the case that it fails all conditions it is not a plaindrom
+				result = "The word/phrase \"" + userInput + "\" is not a palindrome";
+		}
+		JOptionPane.showMessageDialog(null, result, "Content Analyzer Results", 1);
+			
 
 	}
-	public static void longestShortestWord(){
-
+		public static void longestShortestWord(){
+		String requestMessage = "Enter a sentence consisting of spaces, numbers and alphabetic characters only.";	//Message for getUserInput
+		String windowTitle = "Word Length Analyzer", userInput, result = "";										//Title for getUserInput
+		String trimmedUserInput = "";
+		char aChar;
+		boolean isDuplicate = false;
+		int index, maxInt, minInt, count;																					//int vraibles for holding max and min values
+		userInput = getUserInput(requestMessage, windowTitle, ".*");
+		for(index = 0; index < userInput.length(); index++)																	//Trimming the user input
+		{
+			aChar = userInput.charAt(index);
+			if (Character.isLetterOrDigit(aChar) || Character.isWhitespace(aChar))
+				trimmedUserInput += aChar;
+		}
+		String userInputArray [] = trimmedUserInput.split(" ");														//Splitting the trimmed phrase into an array
+		int lengthArray [] = new int [userInputArray.length];														//this parallel array holds the length of each word. Implemented to remove excess use of .length() method
+		if(userInputArray.length > 1)																				//This checks whether it is bigger than one word
+		{
+			minInt = userInputArray [0].length();																	//Min and max values default to the first word
+			maxInt = userInputArray [0].length();
+			for(index = 1; index < userInputArray.length; index++)
+			{
+				lengthArray[index] = userInputArray [index].length();												//We go through the string array, placing the length of each word into the lnegth array
+				if((lengthArray[index]) > maxInt)																	//If it's greater than maxInt, then maxInt becomes that value
+					maxInt = lengthArray[index];																	//the opposite happens for minInt
+				else if ((lengthArray[index]) < minInt)
+					minInt = lengthArray[index];
+			}
+			for(index = 0; index < userInputArray.length; index++)													//This code checks whether the length of a word is the same to another
+			{																										//If it is then it also checks whether the words are the same
+				isDuplicate = false;
+				for(count = index + 1; count < userInputArray.length && isDuplicate == false; count++)				//if they are the same, that word is given a length of -1, so it will not be recognized later
+				{																									
+					if(lengthArray[index] == lengthArray[count])													//the loop cancels once it finds a a duplicate.
+						if(userInputArray[index].equalsIgnoreCase(userInputArray[count]))							//Since it sequentially scanning only those that it has to, no duplicates can be left remaining
+						{
+							lengthArray[index] = -1;
+							isDuplicate = true;
+						}
+				}
+			}
+			
+			result = "The maximum length of a word in this sentence is " + maxInt +					//Here we set up the results
+												"\nThe words with this length are: ";				//If a word is the same length as the max or min value it is printed
+			for(index = 0; index < userInputArray.length; index++)									//All the words with a length of -a can therefore not be printed
+			{
+				if(lengthArray[index] == maxInt)
+					result += "\n" + userInputArray [index];
+			}
+			result += "\nThe minimum length of a word in this sentence is " + minInt +
+												"\nThe words with this length are: ";
+			for(index = 0; index < userInputArray.length; index++)
+			{
+				if(lengthArray[index] == minInt)
+					result += "\n" + userInputArray [index];
+			}
+		}
+		else
+			result = "You must enter a sentence using spaces, number and alphabets only";			//This is reached if the user input less than 2 words, or just non alphabets
+		JOptionPane.showMessageDialog(null, result, "Content Analyser Results", 1);
+		
+	
 	}
 	public static String getUserInput(String message, String windowTitle, String validPattern){
 		/*
