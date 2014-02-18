@@ -156,17 +156,19 @@ public class Project1{
 				if (satisfiedCondition[1]) {
 					resultsMessage += "The input contained all vowels";
 					if (satisfiedCondition[2]) {
-						resultsMessage += "\\nThe input contained all vowels in alphabetical order.";
+						resultsMessage += "\\nThe input contained all vowels in alphabetical order. ";
 					}
 					else if (satisfiedCondition[3]) {
-						resultsMessage += "\\nThe input contained all vowels in reverse alphabetical order.";
+						resultsMessage += "\\nThe input contained all vowels in reverse alphabetical order. ";
 					}
 				}
 			
 				//If a vowel was found at all, the amount of times it was found is added to the message.
 				resultsMessage += "The vowel";
 				for (int i = 0; i < vowelCount.length; i++) {
-					if (vowelCount[i] > 0)
+					if (vowelCount[i] == 1)
+						resultsMessage += ", \'" + vowels.substring(i,i+1) + "\'" + " occurs " + vowelCount[i] + " time";
+					if (vowelCount[i] > 1)
 						resultsMessage += ", \'" + vowels.substring(i,i+1) + "\'" + " occurs " + vowelCount[i] + " times";
 					if (i == vowelCount.length-1) resultsMessage += ".";
 				}
@@ -253,17 +255,19 @@ public class Project1{
 				if (satisfiedCondition[1]) {
 					resultsMessage += "The input contained all consonants";
 					if (satisfiedCondition[2]) {
-						resultsMessage += "\\nThe input contained all consonants in alphabetical order.";
+						resultsMessage += "\\nThe input contained all consonants in alphabetical order. ";
 					}
 					else if (satisfiedCondition[3]) {
-						resultsMessage += "\\nThe input contained all consonants in reverse alphabetical order.";
+						resultsMessage += "\\nThe input contained all consonants in reverse alphabetical order. ";
 					}
 				}
 			
 				//If a consonant was found at all, the amount of times it was found is added to the message.
 				resultsMessage += "The consonant";
 				for (int i = 0; i < consonantCount.length; i++) {
-					if (consonantCount[i] > 0)
+					if (consonantCount[i] == 1)
+						resultsMessage += ", \'" + consonants.substring(i,i+1) + "\'" + " occurs " + consonantCount[i] + " time";
+					if (consonantCount[i] > 1)
 						resultsMessage += ", \'" + consonants.substring(i,i+1) + "\'" + " occurs " + consonantCount[i] + " times";
 					if (i == consonantCount.length-1) resultsMessage += ".";
 				}
