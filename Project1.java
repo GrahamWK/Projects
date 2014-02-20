@@ -281,7 +281,86 @@ public class Project1{
 
 	}
 	public static void stringContent(){
-
+		String requestMessage = "Enter a word or sentence consisting of spaces, letters and numbers only.", windowTitle = "String analyzer";
+		String userInput = getUserInput(requestMessage, windowTitle, "[a-zA-Z0-9\\s]+");
+		String words[];
+		String resultsMessage = "The word/phrase:\t " + userInput + "\n", line1Keys = "qwertyuiop", line2Keys = "asdfghjkl", line3Keys = "zxcvbnm";
+		String vowels = "aeiou";
+		int [] charCount = new int[26];
+		if(userInput != "")
+		{
+			String trimmedUserInput = userInput.replaceAll("\\s+","");
+			trimmedUserInput = trimmedUserInput.toLowerCase();
+			if(userInput.length() == 0)
+				announceError("Invalid input.");
+			// Getting the individual characters and putting them into an array to keep count of them by going through the string.
+			for(int i = 0; i < trimmedUserInput.length(); i++)
+			{
+				char c = trimmedUserInput.charAt(i);
+				charCount[c-97] += 1;
+			}
+			resultsMessage += "The frequency of each characters in the English alphabet present in the word/phrase are:";
+			// Getting the output by going throught the count array and ouputing the ones that dont have a value of 0 
+			boolean pangram = true;//this boolean will be used later to check if string is a pangram by going to false if one of the values in the array is 0.
+			for(int i = 0;i < charCount.length; i++)
+			{
+				int ch = i + 65;
+				char c = (char) ch;
+				if(charCount[i] != 0)
+					resultsMessage += "\n"+ c + ":" + charCount[i];
+				if(charCount[i] == 0)
+					pangram = false;			
+			}
+			words = userInput.split(" ");
+			resultsMessage+= "\nNumber of words in the supplied string are:\t" + words.length;
+			if(pangram)
+				resultsMessage+= "\nSupplied string is a pangram i.e. contains all letters of the alphabet.";
+			else
+				resultsMessage+= "\nSupplied string is not a pangram i.e. one or more letters of the alphabet is missing.";
+			//this boolean array keeps an eye on which lines have been pressed
+			boolean [] keys = {false,false,false};
+			//this for loop goes through the charCount array to check to see if there is a value in that point and terminates if all the values are true
+			for(int i = 0; i < charCount.length && (!keys[0]||!keys[1]||!keys[2]); i++)
+			{
+				int ch = i + 97;
+				char c = (char) ch;
+				if(charCount[i] != 0)
+				{
+					if(line1Keys.indexOf(c)!= -1)
+						keys[0] = true;
+					else if(line2Keys.indexOf(c) != -1)
+						keys[1] = true;
+					else if(line3Keys.indexOf(c) != -1)
+						keys[2] = true;
+				}
+			}
+			//Goes through the keys array and outputs wether or not the line of keys were used.
+			for(int i = 0; i < keys.length; i++)
+			{
+				if(keys[i])
+					resultsMessage+="\nLine " + (i+1) + " on a QWERTY keyboard used.";
+			}
+			boolean isAlternating = true;
+			int count = 0;
+			//this if statment checks to see if the first character is a vowel and if it isnt sets the count integer as the next character ie sets it to 1 rather than 0.
+			if(vowels.indexOf(trimmedUserInput.charAt(0)) == -1)
+				count = 1;
+			for( ;count < trimmedUserInput.length() && isAlternating; )
+			{
+				if(vowels.indexOf(trimmedUserInput.charAt(count)) == -1)
+					isAlternating = false;
+				else
+					count += 2;
+			}
+			if(isAlternating)
+				resultsMessage += "\nWord/phrase contains alternating vowels.";
+			else
+				resultsMessage += "\nWord/phrase doesn't contain alternating vowels.";
+			
+			announceResults(resultsMessage);
+		}
+		else
+			announceError("Invalid Input");
 	}
 	public static void areAnagrams(){
 
