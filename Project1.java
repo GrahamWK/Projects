@@ -156,10 +156,10 @@ public class Project1{
 				if (satisfiedCondition[1]) {
 					resultsMessage += "The input contained all vowels";
 					if (satisfiedCondition[2]) {
-						resultsMessage += "\\nThe input contained all vowels in alphabetical order. ";
+						resultsMessage += "\nThe input contained all vowels in alphabetical order. ";
 					}
 					else if (satisfiedCondition[3]) {
-						resultsMessage += "\\nThe input contained all vowels in reverse alphabetical order. ";
+						resultsMessage += "\nThe input contained all vowels in reverse alphabetical order. ";
 					}
 				}
 			
@@ -255,10 +255,10 @@ public class Project1{
 				if (satisfiedCondition[1]) {
 					resultsMessage += "The input contained all consonants";
 					if (satisfiedCondition[2]) {
-						resultsMessage += "\\nThe input contained all consonants in alphabetical order.\\n";
+						resultsMessage += "\nThe input contained all consonants in alphabetical order.\n";
 					}
 					else if (satisfiedCondition[3]) {
-						resultsMessage += "\\nThe input contained all consonants in reverse alphabetical order. \\n";
+						resultsMessage += "\nThe input contained all consonants in reverse alphabetical order. \n";
 					}
 				}
 			
