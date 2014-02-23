@@ -118,7 +118,7 @@ public class Project1{
 					arrayPosition = (byte) vowels.indexOf(userInput.substring(i, i+1));
 					vowelCount[arrayPosition]++;
 					//make a string containing all of the vowels found, in the order they were found.
-					foundVowels += vowels.substring(arrayPosition);
+					foundVowels += vowels.substring(arrayPosition, arrayPosition+1);
 				}
 			}
 			//checks if any of the counts for each vowel are zero and sets every boolean for a string with all of the vowels to false.
@@ -141,9 +141,9 @@ public class Project1{
 				//check that every other found vowel is in ascending or descending alphabetical order.
 				else {
 					//If two consecutive vowel occurrences aren't identical or bordering each other in the string of vowels set the relevant boolean to false
-					if ((vowels.indexOf(foundVowels.substring(i,i+1)) - vowels.indexOf(foundVowels.substring(i-1,i))) < 0)
+					if ((vowels.indexOf(foundVowels.substring(i,i+1)) < vowels.indexOf(foundVowels.substring(i-1,i))) )
 						satisfiedCondition[2] = false;
-					if ((vowels.indexOf(foundVowels.substring(i,i+1)) - vowels.indexOf(foundVowels.substring(i-1,i))) > 0)
+					if ((vowels.indexOf(foundVowels.substring(i,i+1)) > vowels.indexOf(foundVowels.substring(i-1,i))) )
 						satisfiedCondition[3] = false;
 				}
 			}
@@ -217,7 +217,7 @@ public class Project1{
 					arrayPosition = (byte) consonants.indexOf(userInput.substring(i, i+1));
 					consonantCount[arrayPosition]++;
 					//make a string containing all of the consonants found, in the order they were found.
-					foundConsonants += consonants.substring(arrayPosition);
+					foundConsonants += consonants.substring(arrayPosition, arrayPosition+1);
 				}
 			}
 			//checks if any of the counts for each consonant are zero and sets every boolean for a string with all of the consonants to false.
@@ -240,9 +240,9 @@ public class Project1{
 				//check that every other found consonant is in ascending or descending alphabetical order.
 				else {
 					//If two consecutive consonant occurrences aren't identical or bordering each other in the string of consonants set the relevant boolean to false
-					if ((consonants.indexOf(foundConsonants.substring(i,i+1)) - consonants.indexOf(foundConsonants.substring(i-1,i))) < 0)
+					if ((consonants.indexOf(foundConsonants.substring(i,i+1)) < consonants.indexOf(foundConsonants.substring(i-1,i))))
 						satisfiedCondition[2] = false;
-					if ((consonants.indexOf(foundConsonants.substring(i,i+1)) - consonants.indexOf(foundConsonants.substring(i-1,i))) > 0)
+					if ((consonants.indexOf(foundConsonants.substring(i,i+1)) > consonants.indexOf(foundConsonants.substring(i-1,i))))
 						satisfiedCondition[3] = false;
 				}
 			}
@@ -255,15 +255,15 @@ public class Project1{
 				if (satisfiedCondition[1]) {
 					resultsMessage += "The input contained all consonants";
 					if (satisfiedCondition[2]) {
-						resultsMessage += "\\nThe input contained all consonants in alphabetical order. ";
+						resultsMessage += "\\nThe input contained all consonants in alphabetical order.\\n";
 					}
 					else if (satisfiedCondition[3]) {
-						resultsMessage += "\\nThe input contained all consonants in reverse alphabetical order. ";
+						resultsMessage += "\\nThe input contained all consonants in reverse alphabetical order. \\n";
 					}
 				}
 			
 				//If a consonant was found at all, the amount of times it was found is added to the message.
-				resultsMessage += "The consonant";
+				resultsMessage += "\\nThe consonant";
 				for (int i = 0; i < consonantCount.length; i++) {
 					if (consonantCount[i] == 1)
 						resultsMessage += ", \'" + consonants.substring(i,i+1) + "\'" + " occurs " + consonantCount[i] + " time";
