@@ -1,3 +1,5 @@
+import java.io.*;
+import java.util.*;
 public class Project2{
 	public static void main(String[] args){
 		
@@ -18,6 +20,53 @@ public class Project2{
 
 	}
 
+
+	public static String[] getDataRange(File dataFile, String start, String end){
+		/*
+			Accepts a File object and a start and end date (DD/MM/YYYY).
+			Returns an array of Strings, one for each line found.
+		*/
+			Scanner dataInFile = new Scanner("");
+		try{
+			dataInFile = new Scanner(dataFile);
+		}
+		catch (Exception e) {
+			//this should never be executed if the openFile Method works
+			System.err.println("The data file does not exist.");
+			System.exit(1);
+		}
+		GregorianCalendar startDate = toCalendar(start);
+		GregorianCalendar endDate = toCalendar(end);
+		GregorianCalendar checkDate;
+		ArrayList<String> inRange = new ArrayList<String>();
+		String toCheck = "";
+		while (dataInFile.hasNext()){
+			toCheck = dataInFile.nextLine();
+			checkDate = toCalendar(toCheck.substring(0,10));
+			if (startDate.before(checkDate) || startDate.equals(checkDate)) {
+				if (endDate.after(checkDate) || endDate.equals(checkDate)) {
+					inRange.add(toCheck);
+				}
+			}
+		}
+		String[] dataReturn = new String[inRange.size()];
+		for (int i = 0; i < dataReturn.length; ++i) {
+			dataReturn[i] = inRange.get(i);
+		}
+		return dataReturn;
+
+	}
+
+
+public static String[] getDataRange(File dataFile, String year){
+		/*
+			Accepts a File object and a year.
+			Returns an array of Strings, one for each line found.
+		*/
+		String[] dataReturn = getDataRange(dataFile, ("01/01/" + year), ("31/12/" + year));
+		return dataReturn;
+
+	}
 
 
 	public static GregorianCalendar toCalendar(String toConvert){
