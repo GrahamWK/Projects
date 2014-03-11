@@ -1,10 +1,103 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 public class Project2{
 	public static void main(String[] args){
+		if (args.length < 1 || args.length > 7)
+			System.out.print("Error: You must supply between 1-7 arguments");
+		switch (args.length) {
+            case 1:  
+            	if(validateArgument((args), 1))	
+            		System.out.print("well Done");
+            	break;
+            case 2:  	
+            	if(validateArgument((args), 1) && validateArgument((args), 2))	
+            		System.out.print("well Done");
+           		break;
+            case 3:  
+            	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3))	
+            		System.out.print("well Done");	
+            	break;
+            case 4:
+            	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3) && validateArgument((args), 4))	
+            		System.out.print("well Done");
+            	break;
+            case 5:  	
+            	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3) && validateArgument((args), 5))	
+            		System.out.print("well Done");
+            	break;
+            case 6:  	
+            	if(validateArgument((args), 6))	
+            		System.out.print("well Done");
+            	break;
+            case 7:  	
+            	break;
+        }
 		
-		
+			
 	}
+	
+	public static boolean validateArgument(String [] part, int option)
+	{
+		boolean validArg = true;;
+		switch (option) {
+            case 1:  	
+            	String pattern = "[1|2]";
+            	if(!(part[0].matches(pattern)))
+            	{
+            		System.out.print("The first argument must be either 1 or 2");
+            		validArg = false;
+        		}
+            	break;
+            case 2:  
+            	String pattern2 = "[a-zA-Z0-9]+";
+            	if(!(part[1].matches(pattern2)))
+            	{
+            		System.out.print("The second argument must be one of the following: A R S LP1 LP2");
+            		validArg = false;
+        		}	
+        		else if(!(part[1].equals("A") || part[1].equals("R") || part[1].equals("S") || part[1].equals("LP1") || part[1].equals("LP2")))
+        		{
+	        		System.out.print("The second argument must be one of the following: A R S LP1 LP2");
+            		validArg = false;
+        		}
+            	break;
+            case 3:  
+            	String pattern3 = "[0|1|2]";
+            	if(!(part[2].matches(pattern3)))
+            	{
+            		System.out.print("The third argument must be either 0 or 1 or 2");
+            		validArg = false;
+        		}	
+            	break;
+            case 4: 
+             	String pattern4 = "[0-9]{4}";
+            	if(!(part[3].matches(pattern4)))
+            	{
+            		System.out.print("The fourth argument must be a 4 digit year eg, 2014");
+            		validArg = false;
+        		}	
+            	break;
+            case 5:  	
+            	String pattern5 = "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}";
+            	if(!(part[3].matches(pattern5)))
+            	{
+            		System.out.print("The fourth argument must be a date in the format day/month/year eg 13/2/1998");
+            		validArg = false;
+        		}	
+        		else if(!(part[4].matches(pattern5)))
+            	{
+            		System.out.print("The fifth argument must be a date in the format day/month/year eg 13/2/1998");
+            		validArg = false;
+        		}	
+            	break;
+            case 6:  	
+            	String pattern6
+           	 	break;
+            case 7:  	
+            	break;
+	}
+	return validArg;
+}
 	public static File openFile(String fileName){
 		/*
 			Returns a File object if the desired file exists in the current directory.
