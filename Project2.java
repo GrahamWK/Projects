@@ -23,7 +23,7 @@ public class Project2{
             	break;
             case 5:  	
             	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3) && validateArgument((args), 5))	
-            		System.out.print("well Done");
+            		rangeAnalysis(args);
             	break;
             case 6:  	
             	if(validateArgument((args), 6))	
@@ -91,7 +91,7 @@ public class Project2{
         		}	
             	break;
             case 6:  	
-            	String pattern6
+            	String pattern6;
            	 	break;
             case 7:  	
             	break;
@@ -112,6 +112,95 @@ public class Project2{
 		return openedFile;
 
 	}
+
+	public static void rangeAnalysis(String[] arguments){
+		/*
+			Accepts validated arguments, as they were entered at the command line, and performs
+			analysis on the desired range of dates.
+		*/
+		ArrayList<String> linesFiltered = new ArrayList<String>();
+		//the day of the draw to look for, 0-any, 1-wednesday(4), 2-saturday(7).
+		byte drawDay = Byte.parseByte(arguments[2]);
+		String[] linesFromFile, elementsFromLine;
+		byte[] numbers;
+		int[] jackpotNumberFrequency = new int[45], bonusNumberFrequency = new int[45];
+		boolean includeBonus = false, noDrawsInRange = false;
+		String results = "";
+		if (arguments[0].matches("2")) includeBonus =true;
+		File lottoData = openFile("SampleLottoData.txt");
+		//Get an array of lined from the file in the desired range.
+		linesFromFile = getDataRange(lottoData, arguments[3], arguments[4]);
+		//If the analysis is restricted, filter out other results.
+		if (!arguments[1].matches("(a|A)") && drawDay != 0) {
+			for (String line : linesFromFile) {
+				//check if the results are from the right draw.
+				if (line.lastIndexOf(arguments[1]) != -1)
+					//checks if they are from the right day.
+					if (drawDay == 0) {
+						linesFiltered.add(line);
+					}
+					else{
+						if (drawDay == 1) {
+							//this spaghetti, basically checks what day of the week a date is.
+							if (toCalendar(line.substring(0,10)).get(Calendar.DAY_OF_WEEK) == 4) {
+								linesFiltered.add(line);
+							}
+						}
+						if (drawDay == 2) {
+							//Same thing, but checks it against saturday.
+							if (toCalendar(line.substring(0,10)).get(Calendar.DAY_OF_WEEK) == 7) {
+								linesFiltered.add(line);
+							}
+							
+						}
+
+					}
+			}
+			//check if there are no draws which meet the user's requirements.
+			if (linesFiltered.size()==0) noDrawsInRange = true;
+			//dump the filtered lines into the original array.
+			linesFromFile = new String[linesFiltered.size()];
+			for (int i = 0; i < linesFromFile.length; i++) {
+				linesFromFile[i] = linesFiltered.get(i);
+			}
+			
+		}
+		for (String line : linesFromFile) {
+			System.out.println(line);
+			elementsFromLine = line.split(",");
+			numbers = arrayToByte(elementsFromLine);
+			bonusNumberFrequency[numbers[numbers.length-2]-1]++;
+			for (int i = 1; i < numbers.length-2; i++) {
+				//invalid numbers are represented as zeros
+				if (numbers[i] != 0) {
+					jackpotNumberFrequency[numbers[i]-1]++;
+				}
+			}
+		}
+
+
+		results += "For the draws between " + arguments[3] + " and " + arguments[4] + ";\n";
+
+		results += "---Jackpot Number analysis.---\n";
+		for (int i = 0; i < jackpotNumberFrequency.length; ++i){
+			if (jackpotNumberFrequency[i] != 0)
+				results += "The Number " + (i+1) + " appeared " + jackpotNumberFrequency[i] + " times.\n";
+		}
+		if (includeBonus){
+			results += "---Bonus Number Analysis.---\n";
+			for (int i = 0; i < bonusNumberFrequency.length; ++i){
+				if (bonusNumberFrequency[i] != 0)
+					results += "The Number " + (i+1) + " appeared " + bonusNumberFrequency[i] + " times.\n";
+			}
+		}
+		results += "Any other numbers were not drawn.\n";
+		//if there's no draws matching the users demands, write an error.
+		if (noDrawsInRange)results = "There were no results in the file for this range and draw type\n";
+		System.out.print(results);
+
+
+	}
+
 
 
 	public static String[] getDataRange(File dataFile, String start, String end){
@@ -207,7 +296,7 @@ public static String[] getDataRange(File dataFile, String year){
 	public static byte[] arrayToByte(String[] numberArray){
 		/*
 			Converts an array of Strings into an array of bytes.
-			Returns a zero length array if something went wrong.
+			Returns a value of zero for anything that's non-numeric.
 		*/
 		String numeric = "\\d+";
 		byte[] byteArray = new byte[numberArray.length];
@@ -218,7 +307,6 @@ public static String[] getDataRange(File dataFile, String year){
 			if (numberArray[i].matches(numeric)) {
 				byteArray[i] = Byte.parseByte(numberArray[i]);
 			}
-			else someError = true;
 		}
 		if (someError) byteArray = new byte[0];
 		return byteArray;
