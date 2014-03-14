@@ -5,10 +5,22 @@ public class Project2{
 		if (args.length < 1 || args.length > 7)
 			System.out.print("Error: You must supply between 1-7 arguments");
 		switch (args.length) {
-            case 1:  
-            	if(validateArgument((args), 1))	
-            		System.out.print("well Done");
-            	break;
+            case 1:
+             if(args[0].length() == 4)
+             {
+              if(validateArgument((args), 7))
+              System.out.print("bell Done");
+         
+	     }
+             else if(validateArgument((args), 1))
+             {
+             if(args[0].equals("1") || args[0].equals("2"))	
+             System.out.print("well Done");
+             else
+             System.out.print("well Done");
+             }
+        
+             break;
             case 2:  	
             	if(validateArgument((args), 1) && validateArgument((args), 2))	
             		System.out.print("well Done");
@@ -29,8 +41,10 @@ public class Project2{
             	if(validateArgument((args), 6))	
             		System.out.print("well Done");
             	break;
-            case 7:  	
-            	break;
+            case 7: 
+        	if(validateArgument((args), 6))	
+             		System.out.print("well Done");
+        	break;
         }
 		
 			
@@ -41,10 +55,10 @@ public class Project2{
 		boolean validArg = true;;
 		switch (option) {
             case 1:  	
-            	String pattern = "[1|2]";
+            	String pattern = "[1|2|3|4]";
             	if(!(part[0].matches(pattern)))
             	{
-            		System.out.print("The first argument must be either 1 or 2");
+            		System.out.print("The first argument must be either 1 2 3 or 4 or a four digit year");
             		validArg = false;
         		}
             	break;
@@ -90,11 +104,26 @@ public class Project2{
             		validArg = false;
         		}	
             	break;
-            case 6:  	
-            	String pattern6;
-           	 	break;
-            case 7:  	
-            	break;
+            case 6:
+             String pattern7 = "[0-9]{1,2}";
+             int num;
+             for(int i = 0; 1 < part.length; i++)
+             {
+	     	num = Integer.parseInt(part[i]);
+        	     if(!(part[i].matches(pattern7)))
+       			validArg = false;
+        	    else if(num < 1 || num > 45)
+		    	validArg = false;
+	     }
+         System.out.print("You must only input number's between 1 and 45");	
+            break;
+            case 7:
+             String pattern8 = "[0-9]{4}";
+             if(!(part[0].matches(pattern8)))
+             {
+             System.out.print("The first argument must be either 1 2 3 or 4 or a four digit year");
+             validArg = false;  	
+            
 	}
 	return validArg;
 }
