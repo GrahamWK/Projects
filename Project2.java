@@ -1,7 +1,15 @@
 import java.util.*;
 import java.io.*;
 public class Project2{
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException
+	{
+		//Here the arguments entered by the user are analyzed, validated and then the according actions are taken. 
+		//The first argument can be 1 2 3 4 or a four digit year, if more than one argument is supplied it can only be 1 or 2
+		//1 and 2 are used to specify whether to include bonus, 3 and 4 are used to specify between odd and even.
+		//The second argument can be either A R S L1 L2
+		//The third can be 0 1 or 2
+		//The fourth can be a four digit year, or in the case that 5 arguments are supplied it must be a valid date
+		//If 6 or 7 arguments are supplied, they are all number between 1-45
 		if (args.length < 1 || args.length > 7)
 			System.out.print("Error: You must supply between 1-7 arguments");
 		switch (args.length) {
@@ -15,15 +23,15 @@ public class Project2{
              else if(validateArgument((args), 1))
              {
              if(args[0].equals("1") || args[0].equals("2"))	
-             System.out.print("well Done");
+				Frequency(args);	
              else
-             System.out.print("well Done");
+				System.out.print("well Done");
              }
         
              break;
             case 2:  	
             	if(validateArgument((args), 1) && validateArgument((args), 2))	
-            		System.out.print("well Done");
+            		Frequency(args);
            		break;
             case 3:  
             	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3))	
@@ -35,7 +43,7 @@ public class Project2{
             	break;
             case 5:  	
             	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3) && validateArgument((args), 5))	
-            		rangeAnalysis(args);
+            		System.out.print("well Done");
             	break;
             case 6:  	
             	if(validateArgument((args), 6))	
@@ -52,26 +60,34 @@ public class Project2{
 	
 	public static boolean validateArgument(String [] part, int option)
 	{
+		//This method validates every argument the user inputs. It does not check dates, it checks to see if the argument is written in the write format.
 		boolean validArg = true;;
 		switch (option) {
             case 1:  	
-            	String pattern = "[1|2|3|4]";
+            	String pattern = "[1|2]";
+				if(part.length == 1)
+				{
+					pattern = "[1|2|3|4]";
+				}
             	if(!(part[0].matches(pattern)))
             	{
-            		System.out.print("The first argument must be either 1 2 3 or 4 or a four digit year");
             		validArg = false;
+					if(part.length == 1)
+						System.out.print("The first argument must be either 1 2 3 or 4 or a four digit year");
+					else
+						System.out.print("In the case that more than one argument is supplied, the first argument must be either 1 or 2");
         		}
             	break;
             case 2:  
             	String pattern2 = "[a-zA-Z0-9]+";
             	if(!(part[1].matches(pattern2)))
             	{
-            		System.out.print("The second argument must be one of the following: A R S LP1 LP2");
+            		System.out.print("The second argument must be one of the following: A R S L1 L2");
             		validArg = false;
         		}	
-        		else if(!(part[1].equals("A") || part[1].equals("R") || part[1].equals("S") || part[1].equals("LP1") || part[1].equals("LP2")))
+        		else if(!(part[1].equals("A") || part[1].equals("R") || part[1].equals("S") || part[1].equals("L1") || part[1].equals("L2")))
         		{
-	        		System.out.print("The second argument must be one of the following: A R S LP1 LP2");
+	        		System.out.print("The second argument must be one of the following: A R S L1 L2");
             		validArg = false;
         		}
             	break;
@@ -105,17 +121,18 @@ public class Project2{
         		}	
             	break;
             case 6:
-             String pattern7 = "[0-9]{1,2}";
-             int num;
-             for(int i = 0; 1 < part.length; i++)
-             {
-	     	num = Integer.parseInt(part[i]);
-        	     if(!(part[i].matches(pattern7)))
-       			validArg = false;
-        	    else if(num < 1 || num > 45)
-		    	validArg = false;
-	     }
-         System.out.print("You must only input number's between 1 and 45");	
+				String pattern7 = "[0-9]{1,2}";
+				int num;
+				for(int i = 0; i < part.length; i++)
+					{
+					num = Integer.parseInt(part[i]);
+					if(!(part[i].matches(pattern7)))
+						validArg = false;
+					else if(num < 1 || num > 45)
+						validArg = false;
+					}
+				if(validArg == false)
+					System.out.print("You must only input number's between 1 and 45");	
             break;
             case 7:
              String pattern8 = "[0-9]{4}";
@@ -124,9 +141,55 @@ public class Project2{
              System.out.print("The first argument must be either 1 2 3 or 4 or a four digit year");
              validArg = false;  	
             
+			}
+		
+		}
+		return validArg;
+		//validarg returns true if the argument is a valid one.
 	}
-	return validArg;
-}
+	public static void Frequency(String [] args) throws FileNotFoundException{
+	//This method reports the frequency of each jackpot and bonus number, in a certain categry supplied by the user. 
+	int max = 7;
+	if(Integer.parseInt(args[0]) == 2)
+		max = 8;
+	String criteria = "";
+	if(args.length == 1)
+		criteria = "A";
+	else
+		criteria = args[1];
+	System.out.println(criteria);
+	boolean doCriteria = true;
+	int [] numArray = new int[45];
+	String [] fileItem;
+	File inputFile = new File("sampleLottoData.txt");
+	if(inputFile.exists())
+	{
+		
+		Scanner fileReader = new Scanner(inputFile);
+		while(fileReader.hasNext())
+		{
+			//The loop only analyzes the contents of the line if it matches the criteria argument, ie A R S L1 L2
+			doCriteria = true;
+			fileItem = (fileReader.nextLine()).split(",");
+			if((!(criteria.equalsIgnoreCase("A"))) && (!(fileItem[8].equalsIgnoreCase(criteria))))
+			{	
+				doCriteria = false;
+			}
+			if(doCriteria)
+			{
+				for(int i = 1; i < max; i++)
+					numArray[(Integer.parseInt(fileItem[i]))-1]++;
+			}
+		}
+		fileReader.close();
+		for(int i = 0; i < numArray.length; i++)
+			System.out.println("The number " + (i + 1) + " occurred " + numArray[i] + " times.");
+	}
+	}
+				
+	
+				
+			
 	public static File openFile(String fileName){
 		/*
 			Returns a File object if the desired file exists in the current directory.
