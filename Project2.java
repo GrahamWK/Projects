@@ -157,11 +157,10 @@ public class Project2{
 		criteria = "A";
 	else
 		criteria = args[1];
-	System.out.println(criteria);
 	boolean doCriteria = true;
 	int [] numArray = new int[45];
 	String [] fileItem;
-	File inputFile = new File("sampleLottoData.txt");
+	File inputFile = new File("SampleLottoData.txt");
 	if(inputFile.exists())
 	{
 		
@@ -185,6 +184,8 @@ public class Project2{
 		for(int i = 0; i < numArray.length; i++)
 			System.out.println("The number " + (i + 1) + " occurred " + numArray[i] + " times.");
 	}
+	else
+		System.err.println("Error: File does not exist");
 	}
 				
 	
