@@ -17,17 +17,10 @@ public class Project2{
              if(args[0].length() == 4)
              {
               if(validateArgument((args), 7))
-              System.out.print("bell Done");
-         
-	     }
+              highOrLow(args);
+	    	 }
              else if(validateArgument((args), 1))
-             {
-             if(args[0].equals("1") || args[0].equals("2"))	
-				Frequency(args);	
-             else
-				System.out.print("well Done");
-             }
-        
+				Frequency(args);
              break;
             case 2:  	
             	if(validateArgument((args), 1) && validateArgument((args), 2))	
@@ -47,16 +40,19 @@ public class Project2{
             	break;
             case 6:  	
             	if(validateArgument((args), 6))	
-            		System.out.print("well Done");
+            		JackpotAndBonus(0, args);
             	break;
             case 7: 
         	if(validateArgument((args), 6))	
-             		System.out.print("well Done");
+             		JackpotAndBonus(1, args);
         	break;
         }
 		
 			
 	}
+	
+	
+	
 	
 	public static boolean validateArgument(String [] part, int option)
 	{
@@ -65,17 +61,11 @@ public class Project2{
 		switch (option) {
             case 1:  	
             	String pattern = "[1|2]";
-				if(part.length == 1)
-				{
-					pattern = "[1|2|3|4]";
-				}
             	if(!(part[0].matches(pattern)))
             	{
             		validArg = false;
 					if(part.length == 1)
-						System.out.print("The first argument must be either 1 2 3 or 4 or a four digit year");
-					else
-						System.out.print("In the case that more than one argument is supplied, the first argument must be either 1 or 2");
+						System.out.print("The first argument must be either 1 2 or a four digit year");
         		}
             	break;
             case 2:  
@@ -147,6 +137,204 @@ public class Project2{
 		return validArg;
 		//validarg returns true if the argument is a valid one.
 	}
+	
+	public static void highOrLow(String[] arguments){
+		int year = Integer.parseInt(arguments[0]), max, numSmall = 0, numLarge = 0, freqMainlySmall = 0;
+		String startDate = "01/01/" + year, endDate = "31/12/" + year, changeDate = "";
+		String[] linesFromFile;
+		byte[] lottoResults;
+		boolean checkDate = (year == 1992 || year == 1994 || year == 2006);
+		if (year < 1993){
+			max = 36;
+			changeDate = "22/08/1992";
+		} else if (year < 1995){
+			max = 39;
+			changeDate = "24/09/1994";
+		} else if (year < 2007){
+			max = 42;
+			changeDate = "04/11/2006";
+		} else max = 45;
+		File lottoData = openFile("SampleLottoData.txt");
+		linesFromFile = getDataRange(lottoData, startDate, endDate);
+		for (String line : linesFromFile){
+			lottoResults = arrayToByte(line.split(","));
+			numSmall = numLarge = 0;
+			if (checkDate) {
+				if (toCalendar(line.substring(0,10)).compareTo(toCalendar(changeDate)) < 0) max += 3;
+			}
+			for (int i = 1; i <= 6; ++i) {
+				if (lottoResults[i] <= 10) {
+					numSmall++;
+				} else if (lottoResults[i] >= max - 10) {
+					numLarge++;
+				}
+			}
+			if (numSmall > numLarge) freqMainlySmall++;
+			
+		}
+		System.out.println("For the year " + year + " there was " + freqMainlySmall + " occourence(s) of more small numbers than large numbers");
+	}
+
+
+
+	public static void JackpotAndBonus (int bonusOrNot, String[] numbersString) throws IOException
+	{
+			String result = "";
+			int [] numbersInteger = new int [6];
+			int bonusNumber = 0;
+			//This puts the bonus number from the args into a String into an int value.
+			if(bonusOrNot == 1)
+				bonusNumber = Integer.parseInt(numbersString[6]);
+			for(int i = 0; i < numbersInteger.length ; ++i) 
+			{
+				numbersInteger[i] = Integer.parseInt(numbersString[i]);
+			}
+			//Sorts the numbers supplied into ascending order.
+			for(int i=1; i<numbersInteger.length; i++) 
+			{
+				boolean is_sorted = true;
+	
+				for(int j=0; j<numbersInteger.length - i; j++) 
+				{
+					if(numbersInteger[j] > numbersInteger[j+1]) 
+					{
+					int temp = numbersInteger[j];
+					numbersInteger[j] = numbersInteger[j+1];
+					numbersInteger[j+1] = temp;
+					is_sorted = false;
+					}
+				} 
+				if(is_sorted) break;
+			}
+			//Checks if they are unique.
+			int dupCounter = 0;
+			for(int i = 0; i < numbersInteger.length-1 ; i++)
+			{
+				if(numbersInteger[i] != numbersInteger[i+1])
+					dupCounter ++;
+			}
+			if(dupCounter != numbersInteger.length-1)
+			{
+				System.out.print("Most provide unique numbers");
+				System.exit(0);
+			}
+			
+			File openedFile;
+			openedFile = new File("SampleLottoData.txt");
+			int [] winnings = new int [4];
+			int [] bonusWinnings = new int [4];
+			String aLineFromFile = "";
+			int [] lineFromFile = new int [6];
+			int bonusNumberFromFile;
+			String [] arrayLineFromFile;
+			if(!openedFile.exists())
+			{
+				System.out.print("Cannot find file");
+				System.exit(0);
+			}
+			else
+			{
+				Scanner in = new Scanner(openedFile);
+				while(in.hasNext())
+				{
+					int counter = 0;
+					aLineFromFile = in.nextLine();
+					arrayLineFromFile = aLineFromFile.split(",");
+					for(int d = 1; d < arrayLineFromFile.length - 2; d++)
+						lineFromFile[d-1] = Integer.parseInt(arrayLineFromFile[d]); 
+					boolean found;
+					for(int i = 0; i < numbersInteger.length; i++)
+					{	
+						found = false;
+						for(int c = 0; c < lineFromFile.length && !found; c++)
+						{
+							if(numbersInteger[i] == lineFromFile[c])
+							{
+								counter ++;
+								found = true;
+							}
+						}
+					}
+					//If the counter reaches 3 it gos into this piece of code where it first checks if a bonus number was supplied.
+					if(counter >= 3)
+					{
+						if(bonusOrNot == 1)
+						{
+							//Here a bonus number was supplied and then checks if the bonus number supplied = the bonus number from the file.
+							//If the bonus number supplied is equivalent to the bonus number fron the file it increaments the value at which the amount of winning numbers there are in the bonusWinnings array.
+							//Else it goes into the winnings array.
+							bonusNumberFromFile = Integer.parseInt(arrayLineFromFile[7]);
+							if(bonusNumberFromFile == bonusNumber)
+							{
+								switch(counter)
+								{
+									case 3: bonusWinnings[0]++;		break;
+									case 4: bonusWinnings[1]++;		break;
+									case 5: bonusWinnings[2]++;		break;
+									case 6: bonusWinnings[3]++;		break;
+								}
+							}
+							else
+							{
+								switch(counter)
+								{
+									case 3: winnings[0]++;		break;
+									case 4: winnings[1]++;		break;
+									case 5: winnings[2]++;		break;
+									case 6: winnings[3]++;		break;
+								}
+							}								
+						}
+						else
+						{
+							switch(counter)
+							{
+								case 3: winnings[0]++;		break;
+								case 4: winnings[1]++;		break;
+								case 5: winnings[2]++;		break;
+								case 6: winnings[3]++;		break;
+							}
+						}
+					}
+				}
+			}
+			//All outputing is done here.
+			boolean oneWinAtLeast = false;
+			for(int i = 0;i<winnings.length && !oneWinAtLeast; i++)
+			{
+				if(winnings[i] != 0) 
+					oneWinAtLeast = true;
+				else if(bonusWinnings[i] != 0)
+					oneWinAtLeast = true;
+			}		
+			if(oneWinAtLeast = false)
+				result += "No winnings from the numbers supplied";
+			else
+			{
+				result += "The number supplied had:";
+				if(bonusOrNot == 0)
+				{
+					for(int i = 0; i < winnings.length; i++)
+					{
+						if(winnings[i] != 0)
+							result += "\n" + (i+3) + " winning numbers " + winnings[i] + " times.";
+					}
+				}
+				else
+					{
+					for(int i = 0; i < winnings.length; i++)
+					{
+						if(winnings[i] != 0)
+							result += "\n" + (i+3) + " winning numbers " + winnings[i] + " times but no winning bonus number.";
+						
+						if(bonusWinnings[i] != 0)
+							result += "\n" + (i+3) + " winning numbers " + bonusWinnings[i] + " times and a winning bonus number.";
+					}
+				}
+			}	
+			System.out.print(result);
+	}
+		
 	public static void Frequency(String [] args) throws FileNotFoundException{
 	//This method reports the frequency of each jackpot and bonus number, in a certain categry supplied by the user. 
 	int max = 7, numEven = 0, numOdd = 0;
