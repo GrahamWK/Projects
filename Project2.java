@@ -149,7 +149,7 @@ public class Project2{
 	}
 	public static void Frequency(String [] args) throws FileNotFoundException{
 	//This method reports the frequency of each jackpot and bonus number, in a certain categry supplied by the user. 
-	int max = 7;
+	int max = 7, numEven = 0, numOdd = 0;
 	if(Integer.parseInt(args[0]) == 2)
 		max = 8;
 	String criteria = "";
@@ -157,7 +157,7 @@ public class Project2{
 		criteria = "A";
 	else
 		criteria = args[1];
-	boolean doCriteria = true;
+	boolean doCriteria = true, allEven, allOdd;
 	int [] numArray = new int[45];
 	String [] fileItem;
 	File inputFile = new File("SampleLottoData.txt");
@@ -179,10 +179,36 @@ public class Project2{
 				for(int i = 1; i < max; i++)
 					numArray[(Integer.parseInt(fileItem[i]))-1]++;
 			}
+			if(criteria.equalsIgnoreCase("A"))
+			{
+				allEven = true;
+				allOdd = true;
+				for(int i = 1; i < max; i++)
+				{
+					if((Integer.parseInt(fileItem[i]))%2 == 0)
+						allOdd = false;
+					else
+						allEven = false;
+				}
+				if(allEven)
+					numEven++;
+				else if(allOdd)
+					numOdd++;
+			}
+				
+				
 		}
 		fileReader.close();
 		for(int i = 0; i < numArray.length; i++)
 			System.out.println("The number " + (i + 1) + " occurred " + numArray[i] + " times.");
+		if(criteria.equalsIgnoreCase("A"))
+		{
+			if(max == 7)
+				System.out.println("Number of times all jackpot numbers were even: " + numEven + "\nNumber of times all jackpot numbers were odd: " + numOdd);
+			else
+				System.out.println("Number of times all jackpot and bonus numbers were even: " + numEven + "\nNumber of times all jackpot and bonus numbers were odd: " + numOdd);		
+			
+		}
 	}
 	else
 		System.err.println("Error: File does not exist");
