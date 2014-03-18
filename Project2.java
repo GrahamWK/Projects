@@ -43,7 +43,7 @@ public class Project2{
             	break;
             case 5:  	
             	if(validateArgument((args), 1) && validateArgument((args), 2) && validateArgument((args), 3) && validateArgument((args), 5))	
-            		System.out.print("well Done");
+            		rangeAnalysis(args);
             	break;
             case 6:  	
             	if(validateArgument((args), 6))	
