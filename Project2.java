@@ -327,7 +327,7 @@ public class Project2{
 		for (int i = 0; i < dataReturn.length; ++i) {
 			dataReturn[i] = inRange.get(i);
 		}
-		dataFile.close();
+		dataInFile.close();
 		return dataReturn;
 
 	}
