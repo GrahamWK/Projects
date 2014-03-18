@@ -1,6 +1,11 @@
 import java.util.*;
 import java.io.*;
 public class Project2{
+	/**
+		This Class performs analysis on a data file containing past lottery results.
+		This file must exist in the same folder and be called SampleLottoData.txt .
+	**/
+
 	public static void main(String[] args) throws IOException
 	{
 		//Here the arguments entered by the user are analyzed, validated and then the according actions are taken. 
@@ -139,10 +144,17 @@ public class Project2{
 	}
 	
 	public static void highOrLow(String[] arguments){
+		/*
+			This method checks the file for a given year and prints to the screen how many
+			 times there were more low numbers in the jackpot draw than high numbers.
+		*/
 		int year = Integer.parseInt(arguments[0]), max, numSmall = 0, numLarge = 0, freqMainlySmall = 0;
-		String startDate = "01/01/" + year, endDate = "31/12/" + year, changeDate = "";
+		//String startDate = "01/01/" + year, endDate = "31/12/" + year, changeDate = "";
+
+		String changeDate = "";
 		String[] linesFromFile;
 		byte[] lottoResults;
+		//if the year entered is one containing a draw number change, set a boolean to ensure the date will be checked.
 		boolean checkDate = (year == 1992 || year == 1994 || year == 2006);
 		if (year < 1993){
 			max = 36;
@@ -155,11 +167,16 @@ public class Project2{
 			changeDate = "04/11/2006";
 		} else max = 45;
 		File lottoData = openFile("SampleLottoData.txt");
-		linesFromFile = getDataRange(lottoData, startDate, endDate);
+		//linesFromFile = getDataRange(lottoData, startDate, endDate);
+		linesFromFile = getDataRange(lottoData, arguments[0]);
+
+
 		for (String line : linesFromFile){
 			lottoResults = arrayToByte(line.split(","));
+			//reset both variables to zero
 			numSmall = numLarge = 0;
 			if (checkDate) {
+				//if the number of balls in the draw increases, the definition for a large number changes.
 				if (toCalendar(line.substring(0,10)).compareTo(toCalendar(changeDate)) < 0) max += 3;
 			}
 			for (int i = 1; i <= 6; ++i) {
