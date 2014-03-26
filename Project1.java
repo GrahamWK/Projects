@@ -363,6 +363,55 @@ public class Project1{
 			announceError("Invalid Input");
 	}
 	public static void areAnagrams(){
+		String inputA = getUserInput("Please enter a word, phrase, or sentence consisting of alpabetic characters only.", "Anagram analyzer", "[a-zA-Z\\s]+");
+		// First and second if statement determines if you have picked up avalid input or any at all off the user. 
+		if (inputA == null || inputA == "")
+		announceError("Invalid entry found, returning to main menu.\n\n*Remember no numeric or special character are allowed*");
+		else{	
+			String inputB = getUserInput("Please enter an anagram of your previous input.", "Anagram analyzer", "[a-zA-Z\\s]+"), results = "";
+			if (inputB == null || inputB == "")
+			announceError("Invalid entry found, returning to main menu.\n\n*Remember no numeric or special character are allowed*");
+			else{
+				// Two Strings declared to hold the original format of content entered by the user.
+				String s1 = inputA, s2 = inputB;
+				// Couple of lines to break input down into single blocks of lower case characters.
+				inputA = inputA.toLowerCase();
+				inputB = inputB.toLowerCase();
+				inputA = inputA.replaceAll("[\\s]", "");
+				inputB = inputB.replaceAll("[\\s]", "");
+				/* If statement to determine length of both Strings,
+				if they are not the same length after the previous four lines they are obviously not anagrams of each other. 
+				The program ends if this condition is not met. */
+				if (inputA.length() != inputB.length())
+				results += s1 + " is not an anagram of " + s2;
+				else{
+					/* Declared two ints and one char to hold the changing values being passed through my two for loops:
+					count, to hold the overall numeric value of String
+					value, to hold the numeric character value
+					temp, to hold the character at each point in the String */
+					int count = 0, value;
+					char temp;
+					/* The first half of this for loop adds each characters numeric value from inputA to count.
+					The second half of this for loop subtracts each characters numeric value from inputB from count.
+					So if both inputs are indeed anagrams of each other count sould remain at zero. */
+					for (int i = 0; i < inputA.length(); i++){
+						temp = inputA.charAt(i);
+						value = Character.getNumericValue(temp);
+						count += value;
+						temp = inputB.charAt(i);
+						value = Character.getNumericValue(temp);
+						count -= value;
+					}
+					// Final if statement to check if count is equivalent to zero and thus determining the result message that will appear.
+					if (count == 0)
+					results += s1 + " is an anagram of " + s2;
+					else{
+						results += s1 + " is not an anagram of " + s2;
+					}
+				}
+				announceResults(results);
+			}
+		}
 
 	}
 	public static void isPalindrome(){
