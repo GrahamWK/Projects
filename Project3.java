@@ -1,10 +1,10 @@
 import java.util.Scanner;
 public class Project3{
 	/**
-		A simple program to demonstrate string manipulation.
+		A program to demonstrate string manipulation and handling files.
 		Effort was made to have only one exit point in the code, returning an exit state would probably be a better idea though.
 		I'm also assuming that the main method is meant do deal with anything but selecting the method to execute.
-		Spelling in this code is complaint with American English.
+		Spelling in this code is compliant with American English.
 	**/
 	//This Scanner object is declared globally because two methods require it.
 	public static Scanner consoleInput = new Scanner(System.in);
@@ -19,10 +19,10 @@ public class Project3{
 		while (menuChoice != 0){
 			menuChoice = getMenuOption();
 			/*
-			The switch calls the desired method based on the user's selection and resets
-			the menuChoice variable to the default of -1 if a feature (method) was used.
-			The option 0 results in a break from the switch construct in order to keep menuChoice
-			at 0 and end the while loop.
+				The switch calls the desired method based on the user's selection and resets
+				the menuChoice variable to the default of -1 if a feature (method) was used.
+				The option 0 results in a break from the switch construct in order to keep menuChoice
+				at 0 and end the while loop.
 			*/
 				switch (menuChoice){
 						case 1: SearchDictionary();
@@ -58,8 +58,8 @@ public class Project3{
 		menuOptions += "\n 7) Lexicographer function";
 		menuOptions += "\n 0) Exit";
 		/*
-		gets an option from the user and trims off leading and trailing whitespace
-		a better solution would be needed if the menu had more than ten options.
+			gets an option from the user and trims off leading and trailing whitespace
+			a better solution would be needed if the menu had more than ten options.
 		*/
 		System.out.println(menuOptions);
 		userChoice = consoleInput.nextLine();
