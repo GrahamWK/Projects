@@ -22,10 +22,12 @@ public class Project3{
 		dictFileName = consoleInput.nextLine();
 		userDictFile = new File(dictFileName);
 		if (userDictFile.exists()){
-			userDictArrayList = readFile(dictFileName);
+			userDictArrayList = readWordsFromFile(dictFileName);
 		} else {
 			userDictArrayList = new ArrayList<String>();
-			System.out.println()
+			System.out.println("The file was not found, an empty one will be created");
+			//Create a new file 
+			writeToFile(userDictArrayList, dictFileName);
 		}
 
 		while (menuChoice != 0){
@@ -107,15 +109,57 @@ public class Project3{
 	
 
 
-	public static ArrayList<String> readFile(String fileName){
+	public static ArrayList<String> readWordsFromFile(String fileName){
 		/*
 			Accepts a string denoting the relative position of a text file.
 			Returns an ArrayList of Strings with a single word in each, including special characters.
 		*/
 		File fileToRead = new File(fileName);
-		if (!fileToRead.exists()){}
+		Scanner dataFromFile;
 		ArrayList<String> fileWordsArrayList = new ArrayList<String>();
+		String[] wordsFromFile;
+		try {
+				if (!fileToRead.exists()){
+					dataFromFile = new Scanner(fileToRead);
+					while (dataFromFile.hasNext()) {
+						//deal with having multiple words on a line.
+						wordsFromFile = dataFromFile.nextLine().split(" ");
+						//dump all of that business into the ArrayList no matter what.
+						for (String word : wordsFromFile) fileWordsArrayList.add(word);
+					}
+				}
+		}
+		catch (Exception e){
+			//If the file doesn't exist and logic fails, empty out the ArrayList.
+			fileWordsArrayList = new ArrayList<String>();
+		}
 		return fileWordsArrayList;
+	}
+
+
+	public static void writeToFile(ArrayList<String> lines, String fileName){
+		/*
+			Will print an ArrayList of Strings to a file defined by a supplied String.
+			Terminates the application with an error message if exceptions occur.
+		*/
+		PrintWriter output;
+		try {
+			output = new PrintWriter(fileName);
+			//This is to make a new file, or blank it out if the ArrayList is empty
+			output.println("");
+			for (String lineToWrite : lines)
+				output.println(lineToWrite);
+			output.close();
+		}
+		catch (Exception e) {
+			System.err.println("Something dreadful has happened.\nThe application can't access/modify files.\nIt will now exit.");
+			System.exit(74);
+		}
+		
+
+
+
+
 	}
 }
 	
