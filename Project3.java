@@ -25,7 +25,7 @@ public class Project3{
 		dictFileName = consoleInput.nextLine();
 		userDictFile = new File(dictFileName);
 		if (userDictFile.exists()){
-			dictionaryArrayList = readWordsFromFile(dictFileName);
+			dictionaryArrayList = readWordsFromFile(dictFileName, 0);
 		} else {
 			dictionaryArrayList = new ArrayList<String>();
 			System.out.println("The file was not found, an empty one will be created");
@@ -54,7 +54,7 @@ public class Project3{
 						break;
 						case 6: addPassage();
 						break;
-						case 7: lexicographer();
+						case 7: lexicographer(dictFileName);
 						break;
 						case 0: break;
 						default: menuChoice = -1;
@@ -133,70 +133,88 @@ public class Project3{
 		}
 	}
 		
-	public static void updateWordTxt(String file, int n) throws IOException {
-		PrintWriter outFile = new PrintWriter(file);
-		if(n == 1){
-			for(int i =0; i < tempArrayList.size(); i++){
-				outFile.println(tempArrayList.get(i));
-			}
-		}
-		else{
-			for(int i =0; i < dictionaryArrayList.size(); i++){
-				outFile.println(dictionaryArrayList.get(i));
-			}
-		}
-			
-		outFile.close();
-	}
-	
-	public static boolean searchDictionaryArrayList(String wordToSearch) throws IOException{
-		int first = 0; int last = dictionaryArrayList.size()-1; int middle = (first + last)/2;
-		boolean found = false;
-		while(first <= last && !found)
-		{
-			if((dictionaryArrayList.get(middle)).equalsIgnoreCase(wordToSearch)) 			found = true;
-			else if ((dictionaryArrayList.get(middle)).compareToIgnoreCase(wordToSearch) > 0) last = middle - 1;
-			else if ((dictionaryArrayList.get(middle)).compareToIgnoreCase(wordToSearch) < 0) first = middle + 1;
-			middle = (first + last)/2;
-		}
-		return found;	
-		}
-		
-	public static void addTempArrayList(String wordToSearch) throws IOException{
-		int first = 0, last = tempArrayList.size()-1; int middle = (first + last)/2;
-		boolean found = false;
-		while(first <= last && !found)
-		{
-			if((tempArrayList.get(middle)).equalsIgnoreCase(wordToSearch)) 			found = true;
-			else if ((tempArrayList.get(middle)).compareToIgnoreCase(wordToSearch) > 0) last = middle - 1;
-			else if ((tempArrayList.get(middle)).compareToIgnoreCase(wordToSearch) < 0) last = middle + 1;
-			middle = (first + last)/2;
-		}
-		if(!found){
-			System.out.print("\na lexicographer has been requested to approve the word\n");
-			tempArrayList.add(wordToSearch);
-			Collections.sort(tempArrayList);
-			updateWordTxt("temp.txt", 1);
-			}
-		else
-			System.out.print("\nit is currently awaiting a lexocgraphers approval\n");
-		}
+
 
 	
 	public static void frequencyWordCount(){}
 	
 	public static void longesyShortestPalindrome(){}
 	
-	public static void addPassage(){}
+	public static void addPassage() throws IOException{
+		System.out.println("Please enter the name of the passage file you wish to add.");
+		String result = "", tempWord;
+		int k =0;
+		String dictFileName = consoleInput.nextLine();
+		ArrayList<String> passageArrayList = readWordsFromFile(dictFileName, 1);
+		if(!(passageArrayList.isEmpty())){
+			result = "Unique words present in file:\n";
+			for(int i = 0; i < passageArrayList.size();)
+			{
+				tempWord = passageArrayList.get(i);
+				if(searchDictionaryArrayList(tempWord) || ((passageArrayList.indexOf(tempWord)!= -1) && (passageArrayList.indexOf(tempWord) != i)))
+					passageArrayList.remove(i);
+				else
+					i++;
+			}
+			
+			for(int j = 0; j < passageArrayList.size();j++){
+				if(!(passageArrayList.get(j)).equals("")){
+						result += passageArrayList.get(j) + "\t";
+					k++;
+					}
+				if(k == 4){
+					result +="\n";
+					k = 0;
+				}
+			}
+			if(k!=0)
+				result += "\n";
+			System.out.print(result);
+			for(int i = 0; i < passageArrayList.size();i++){
+				String wordToSearch = passageArrayList.get(i);
+				int first = 0, last = tempArrayList.size()-1; int middle = (first + last)/2;
+				boolean found = false;
+				while(first <= last && !found)
+				{
+					if((tempArrayList.get(middle)).equalsIgnoreCase(wordToSearch)) 			found = true;
+					else if ((tempArrayList.get(middle)).compareToIgnoreCase(wordToSearch) > 0) last = middle - 1;
+					else if ((tempArrayList.get(middle)).compareToIgnoreCase(wordToSearch) < 0) first = middle + 1;
+					middle = (first + last)/2;
+				}
+				if(!found)
+					tempArrayList.add(wordToSearch);
+					
+			}
+			
+			Collections.sort(tempArrayList);
+			updateWordTxt("temp.txt", 1);
+			
+			
+		}
+		else
+			System.out.println("The file does not exist or returned empty.");
+	}
+			
 	
-	public static void lexicographer(){}
+	public static void lexicographer(String fileName) throws IOException{
+		tempArrayList = readWordsFromFile("temp.txt", 0);
+		for(int i =0; i < tempArrayList.size();i++){
+			if(!(searchDictionaryArrayList(tempArrayList.get(i))))
+				dictionaryArrayList.add(tempArrayList.get(i));	
+		}
+		Collections.sort(dictionaryArrayList);
+		updateWordTxt(fileName, 0);
+		System.out.println("Words from temp.txt added to dictionary file");
+	}
 		
-	public static ArrayList<String> readWordsFromFile(String fileName){
+	public static ArrayList<String> readWordsFromFile(String fileName, int n){
 		/*
 			Accepts a string denoting the relative position of a text file.
 			Returns an ArrayList of Strings with a single word in each, including special characters.
 		*/
 		File fileToRead = new File(fileName);
+		String tempWord = "", trimmedWord = "";
+		char aChar;
 		Scanner dataFromFile;
 		ArrayList<String> fileWordsArrayList = new ArrayList<String>();
 		String[] wordsFromFile;
@@ -207,7 +225,22 @@ public class Project3{
 						//deal with having multiple words on a line.
 						wordsFromFile = dataFromFile.nextLine().split(" ");
 						//dump all of that business into the ArrayList no matter what.
-						for (String word : wordsFromFile) fileWordsArrayList.add(word);
+						if(n == 1){
+							for (int j = 0; j < wordsFromFile.length;j++){
+								trimmedWord = "";
+								tempWord = wordsFromFile[j];
+								for(int index = 0; index < tempWord.length(); index++)	
+								{
+									aChar = tempWord.charAt(index);
+									if (Character.isLetterOrDigit(aChar) || aChar == '\'' || aChar == '-')
+										trimmedWord += aChar;
+								}
+								fileWordsArrayList.add(trimmedWord);
+										
+							}
+						}
+						else
+							for (String word : wordsFromFile) fileWordsArrayList.add(word);
 					}
 				}
 		}
@@ -238,5 +271,54 @@ public class Project3{
 			System.exit(74);
 		}
 	}
+	public static void updateWordTxt(String file, int n) throws IOException {
+		PrintWriter clearFile = new PrintWriter(file);
+		clearFile.close();
+		PrintWriter outFile = new PrintWriter(file);
+		if(n == 1){
+			for(int i =0; i < tempArrayList.size(); i++){
+				outFile.println(tempArrayList.get(i));
+			}
+		}
+		else{
+			for(int i =0; i < dictionaryArrayList.size(); i++){
+				outFile.println(dictionaryArrayList.get(i));
+			}
+		}		
+		outFile.close();
+	}
+	
+	public static boolean searchDictionaryArrayList(String wordToSearch) throws IOException{
+		int first = 0; int last = dictionaryArrayList.size()-1; int middle = (first + last)/2;
+		boolean found = false;
+		while(first <= last && !found)
+		{
+			if((dictionaryArrayList.get(middle)).equalsIgnoreCase(wordToSearch)) 			found = true;
+			else if ((dictionaryArrayList.get(middle)).compareToIgnoreCase(wordToSearch) > 0) last = middle - 1;
+			else if ((dictionaryArrayList.get(middle)).compareToIgnoreCase(wordToSearch) < 0) first = middle + 1;
+			middle = (first + last)/2;
+		}
+		return found;	
+		}
+		
+	public static void addTempArrayList(String wordToSearch) throws IOException{
+		int first = 0, last = tempArrayList.size()-1; int middle = (first + last)/2;
+		boolean found = false;
+		while(first <= last && !found)
+		{
+			if((tempArrayList.get(middle)).equalsIgnoreCase(wordToSearch)) 			found = true;
+			else if ((tempArrayList.get(middle)).compareToIgnoreCase(wordToSearch) > 0) last = middle - 1;
+			else if ((tempArrayList.get(middle)).compareToIgnoreCase(wordToSearch) < 0) first = middle + 1;
+			middle = (first + last)/2;
+		}
+		if(!found){
+			System.out.print("\na lexicographer has been requested to approve the word\n");
+			tempArrayList.add(wordToSearch);
+			Collections.sort(tempArrayList);
+			updateWordTxt("temp.txt", 1);
+			}
+		else
+			System.out.print("\nit is currently awaiting a lexocgraphers approval\n");
+		}
 }
 		
