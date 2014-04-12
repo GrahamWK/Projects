@@ -17,7 +17,8 @@ public class Leaderboard{
 		for (int i = 0; i < teamNames.size() && i < teamNums.size(); ++i){
 			unsortedLines.add(new TeamStats(teamNames.get(i), teamNums.get(i)));
 		}
-		title = String.format("%3s %3s %3s %5s %3s %3s %3s %3s %3s %6s %3s %3s %3s %3s %3s %3s %-15s", "Pos.", "Pl.", "Home:", "W", "D", "L", "F", "A", "Away:", "W", "D", "L", "F", "A", "GD", "Pts.", "Team Name");
+		String titleFormat = "%5s %3s  %5s%2s %2s %2s %2s %2s  %5s%2s %2s %2s %2s %2s %3s %4s %9s";
+		title = String.format(titleFormat, "Pos.", "Pl.", "Home:", "W", "D", "L", "F", "A", "Away:", "W", "D", "L", "F", "A", "GD", "Pts.", "Team Name");
 	}
 
 
@@ -81,7 +82,7 @@ public class Leaderboard{
 
 		//add every line to the String to return, on a seperate line.
 		for (int i = 0; i < orderedStats.size(); ++i){
-			toReturn+= String.format("%3d ",i+1);
+			toReturn+= String.format("%4s ",i+1);
 			toReturn+=  (orderedStats.get(i) + "\n");
 		}
 		return toReturn;
@@ -114,8 +115,9 @@ class TeamStats{
 			Returns a String to allow the object to be printed to the screen.
 		*/
 
-		//Format strings are terrible, but this was te easiest solution.
-		return String.format("%3s %8s  %3s %3s %3s %3s %6s %3s %3s %3s %3s %3s %3s %-25s" ,matchesPlayed, homeWins, homeDraws, homeLosses, hGoalsFor, hGoalsAg, awayWins, awayDraws, awayLosses, aGoalsFor, aGoalsAg, goalDiff, points, teamName);
+		//Format strings are terrible, but this was the easiest solution.
+			String printFormat = " %3s %5s %2s %2s %2s %2s %2s %5s %2s %2s %2s %2s %2s %3s %4s %9s";
+		return String.format(printFormat ,matchesPlayed, "",homeWins, homeDraws, homeLosses, hGoalsFor, hGoalsAg, "",awayWins, awayDraws, awayLosses, aGoalsFor, aGoalsAg, goalDiff, points, teamName);
 	}
 
 
